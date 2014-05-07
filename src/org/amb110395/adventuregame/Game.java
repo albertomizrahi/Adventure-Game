@@ -17,7 +17,7 @@ import javax.swing.WindowConstants;
 public class Game extends Canvas {
 	/* Boolean that determines whether game is running or not */
 	private boolean gameRunning;
-	/*  */
+	/* Handles the input from the user and sets the character's movement */
 	private KeyInputHandler inputHandler;
 	/* The strategy that allows us to use accelerate page flipping */
 	private BufferStrategy strategy;
@@ -25,9 +25,10 @@ public class Game extends Canvas {
 	private Map map;
 	/* List of all the existing entities in the world */
 	private List<Entity> entities;
+	private List<Enemy> enemies;
 	/* Object that represents the main character */
 	private Entity mainCharacter;
-	
+	/* Represents the view of the world that the user can see */
 	private Camera camera;
 	
 
@@ -99,12 +100,14 @@ public class Game extends Canvas {
 
 	public void initEntities() {
 		entities = new ArrayList<Entity>();
+		enemies = new ArrayList<Enemy>();
 
-		mainCharacter = new MainCharacter(Constants.MAIN_CHARACTER, Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, map);
+		mainCharacter = new MainCharacter(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, map);
 		entities.add(mainCharacter);
-		
-		mainCharacter.setTileX((int) mainCharacter.getX() / map.getTileSize());
-		mainCharacter.setTileY((int) mainCharacter.getY() / map.getTileSize());
+
+		Enemy enemy = new Enemy(Constants.ENEMY_1, 200, 200, map);
+		entities.add(enemy);
+		enemies.add(enemy);
 		
 		camera = new Camera(mainCharacter.getX() - Constants.CAMERA_WIDTH/2.0, 
 				mainCharacter.getX() - Constants.CAMERA_HEIGHT/2.0,
@@ -147,162 +150,93 @@ public class Game extends Canvas {
 			mainCharacter.setVerticalVelocity(MainCharacter.MOVE_SPEED);
 			mainCharacter.setDirection(Direction.DOWN);
 		}
-		else {
-			mainCharacter.setDirection(Direction.STATIONARY);
-		}
+//		else {
+//			mainCharacter.setDirection(Direction.STATIONARY);
+//		}
 		
 
 	}
 
 	
-	public void update(long delta) {
-		
+	public void update(long time) {
 		
 		for (Entity entity : entities) {
 			
-			//entity.move(delta);
-			
-			double distanceX = (delta * entity.getHorizontalVelocity()) / 1000;
-			double distanceY = (delta * entity.getVerticalVelocity()) / 1000;;
-			
-			if (entity.getDirection().equals(Direction.RIGHT)) {
-				//double x = (entity.getX() + entity.getSprite().getWidth());
-				double x = entity.getX() + distanceX + entity.getSprite().getWidth();
-				double yTopCorner = entity.getY();
-				double yBotCorner = (entity.getY() + entity.getSprite().getHeight()-1);
-				
-				Tile topRight = map.getTileInCoord(x, yTopCorner-1);
-				Tile botRight =  map.getTileInCoord(x,yBotCorner-1);
-				
-				double deltaX = 0;
-				if (!topRight.isPassable() || !botRight.isPassable()) {
-					 deltaX = x - topRight.getX();
-				}
-								
-				//if (deltaX > 0)
-					entity.moveBy(distanceX-deltaX, 0);
-			} 
-			else if (entity.getDirection().equals(Direction.LEFT)) {
-				double x = entity.getX() + distanceX;
-				double yTopCorner = entity.getY();
-				double yBotCorner = (entity.getY() + entity.getSprite().getHeight()-1);
-				
-				Tile topLeft = map.getTileInCoord(x, yTopCorner);
-				Tile botLeft =  map.getTileInCoord(x, yBotCorner);
-				
-				double deltaX = 0;
-				if (!topLeft.isPassable() || !botLeft.isPassable()) {
-					 deltaX = x - (topLeft.getX() + map.getTileSize());
-				}
-								
-				//if (deltaX < 0)
-					entity.moveBy(distanceX - deltaX, 0);
-			} 
-			else if (entity.getDirection().equals(Direction.UP)) {
-				//double y = entity.getY();
-				double y = entity.getY() + distanceY-1;
-				double xLeftCorner =  entity.getX();
-				double xRightCorner = (entity.getX() + entity.getSprite().getWidth()-1);
-				
-				Tile topLeft = map.getTileInCoord(xLeftCorner, y);
-				Tile topRight =  map.getTileInCoord(xRightCorner, y);
-				
-				double deltaY = 0;
-				if (!topLeft.isPassable() || !topRight.isPassable()) {
-					 deltaY = y - (topLeft.getY() + map.getTileSize());
-				}
-								
-				//if (deltaY < 0)
-					entity.moveBy(0,distanceY - deltaY);
-			} 
-			else if (entity.getDirection().equals(Direction.DOWN)) {
-				//double y = (entity.getY() + entity.getSprite().getHeight());
-				double y = entity.getY() + distanceY + entity.getSprite().getHeight();
-				double xLeftCorner =  entity.getX();
-				double xRightCorner = (entity.getX() + entity.getSprite().getWidth()-1);
-				
-				Tile botLeft = map.getTileInCoord(xLeftCorner, y);
-				Tile botRight =  map.getTileInCoord(xRightCorner, y);
-				
-				double deltaY = 0;
-				if (!botLeft.isPassable() || !botRight.isPassable()) {
-					 deltaY = y - botLeft.getY();
-				}
-								
-				//if (deltaY > 0)
-					entity.moveBy(0,distanceY-deltaY);
-			} 
-			
-			
-			
+			entity.move(time);
 
-//			// Top left corner
-//			double newX = entity.getX() + (entity.getHorizontalVelocity()*delta)/1000;
-//			double newY = entity.getY() + (entity.getVerticalVelocity()*delta)/1000;
-//			int newTileX = 	(int) newY / map.getTileSize();
-//			int newTileY = (int) newX / map.getTileSize();
-//			//System.out.println((int) newY / map.getTileSize() + " , " + (int) newX / map.getTileSize());
-//			Tile one = map.getTile(newTileX, newTileY);
+//			double distanceX = (delta * entity.getHorizontalVelocity()) / 1000;
+//			double distanceY = (delta * entity.getVerticalVelocity()) / 1000;;
+//			double deltaX = 0;
+//			double deltaY = 0;
 //			
-//			// Top right corner
-//			newX = (entity.getX() + entity.getSprite().getWidth()) + (entity.getHorizontalVelocity()*delta)/1000;
-//			newY = entity.getY() + (entity.getVerticalVelocity()*delta)/1000;
-//			newTileX = 	(int) newY / map.getTileSize();
-//			newTileY = (int) newX / map.getTileSize();
-//			//System.out.println((int) newY / map.getTileSize() + " , " + (int) newX / map.getTileSize());
-//			Tile two = map.getTile(newTileX, newTileY);
+//			if (entity.getDirection().equals(Direction.RIGHT)) {
+//				double x = entity.getX() + distanceX + entity.getSprite().getWidth();
+//				double yTopCorner = entity.getY();
+//				double yBotCorner = (entity.getY() + entity.getSprite().getHeight()-1);
+//				
+//				Tile topRight = map.getTileInCoord(x, yTopCorner-1);
+//				Tile botRight =  map.getTileInCoord(x,yBotCorner-1);
+//				
+//				
+//				if (!topRight.isPassable() || !botRight.isPassable()) {
+//					 deltaX = x - topRight.getX();
+//				}
+//			} 
+//			else if (entity.getDirection().equals(Direction.LEFT)) {
+//				double x = entity.getX() + distanceX;
+//				double yTopCorner = entity.getY();
+//				double yBotCorner = (entity.getY() + entity.getSprite().getHeight()-1);
+//				
+//				Tile topLeft = map.getTileInCoord(x, yTopCorner);
+//				Tile botLeft =  map.getTileInCoord(x, yBotCorner);
+//				
+//				if (!topLeft.isPassable() || !botLeft.isPassable()) {
+//					 deltaX = x - (topLeft.getX() + map.getTileSize());
+//				}
+//			} 
+//			else if (entity.getDirection().equals(Direction.UP)) {
+//				double y = entity.getY() + distanceY-1;
+//				double xLeftCorner =  entity.getX();
+//				double xRightCorner = (entity.getX() + entity.getSprite().getWidth()-1);
+//				
+//				Tile topLeft = map.getTileInCoord(xLeftCorner, y);
+//				Tile topRight =  map.getTileInCoord(xRightCorner, y);
+//				
+//				if (!topLeft.isPassable() || !topRight.isPassable()) {
+//					 deltaY = y - (topLeft.getY() + map.getTileSize());
+//				}
+//			} 
+//			else if (entity.getDirection().equals(Direction.DOWN)) {
+//				double y = entity.getY() + distanceY + entity.getSprite().getHeight();
+//				double xLeftCorner =  entity.getX();
+//				double xRightCorner = (entity.getX() + entity.getSprite().getWidth()-1);
+//				
+//				Tile botLeft = map.getTileInCoord(xLeftCorner, y);
+//				Tile botRight =  map.getTileInCoord(xRightCorner, y);
+//				
+//				if (!botLeft.isPassable() || !botRight.isPassable()) {
+//					 deltaY = y - botLeft.getY();
+//				}
+//			} 
 //			
-//			// Bottom left corner
-//			newX = entity.getX() + (entity.getHorizontalVelocity()*delta)/1000;
-//			newY = (entity.getY() + entity.getSprite().getHeight()) + (entity.getVerticalVelocity()*delta)/1000;
-//			newTileX = 	(int) newY / map.getTileSize();
-//			newTileY = (int) newX / map.getTileSize();
-//			//System.out.println((int) newY / map.getTileSize() + " , " + (int) newX / map.getTileSize());
-//			Tile three = map.getTile(newTileX, newTileY);
+//			double dx = distanceX - deltaX;
+//			double dy = distanceY - deltaY;
 //			
-//			// Bottom right corner
-//			newX = (entity.getX() + entity.getSprite().getWidth()) + (entity.getHorizontalVelocity() * delta)/ 1000;
-//			newY = (entity.getY() + entity.getSprite().getHeight()) + (entity.getVerticalVelocity() * delta) / 1000;
-//			newTileX = (int) newY / map.getTileSize();
-//			newTileY = (int) newX / map.getTileSize();
-//			// System.out.println((int) newY / map.getTileSize() + " , " + (int)
-//			// newX / map.getTileSize());
-//			Tile four = map.getTile(newTileX, newTileY);
-//			double deltaX = newX - four.getX();
-//			double deltaY = newY - four.getY();
-//			
-//			if (one.isPassable() && two.isPassable() && three.isPassable() && four.isPassable()) {
-			//entity.move(delta);
-			/*
-			 * (x,y) coordinates must be inverted in order to get the corresponding tile, 
-			 * i.e., x coordinates are used to find the Y tile and y coordinates are used to find the X tile.
-			 * This is done so that the corresponding tile position directly corresponds to the one in the 2d array
-			 * 
-			 */
-			entity.setTileX((int) entity.getY() / map.getTileSize());
-			entity.setTileY((int) entity.getX() / map.getTileSize());
-			//}
+//			entity.moveBy(dx,dy);
 			
 		}
-		
-		
-		/*** Update camera coordinates ***/
-		double cameraX = mainCharacter.getX() - Constants.CAMERA_WIDTH/2.0;
-		double cameraY = mainCharacter.getY() - Constants.CAMERA_HEIGHT/2.0;
-		
-		if (cameraX < 0)
-			cameraX = 0;
-		else if (cameraX + Constants.CAMERA_WIDTH > map.getMapWidth())
-			cameraX = map.getMapWidth() - Constants.CAMERA_WIDTH;
-		
-		if (cameraY < 0)
-			cameraY = 0;
-		else if(cameraY + Constants.CAMERA_HEIGHT > map.getMapHeight())
-			cameraY = map.getMapHeight() - Constants.CAMERA_HEIGHT;
-		
-		camera.setX(cameraX);
-		camera.setY(cameraY);
 
+
+		for (Entity enemy : enemies) {
+			if (mainCharacter.hasCollidedWith(enemy)) {
+				mainCharacter.collidedWith(enemy);
+				enemy.collidedWith(mainCharacter);
+			}
+		}
+		
+		camera.update(mainCharacter, map);
+
+		System.out.println(mainCharacter.getStats().getHitpoints());
 			
 		
 	}

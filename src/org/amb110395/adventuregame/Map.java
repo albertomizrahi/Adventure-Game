@@ -11,8 +11,8 @@ public class Map {
 	public Map(int tileSize, int verticalTiles, int horizontalTiles) {
 		map = new Tile[verticalTiles][horizontalTiles];
 		this.tileSize = tileSize;
-		this.mapWidth = (tileSize) * (horizontalTiles);
-		this.mapHeight = (tileSize) * (verticalTiles);
+		this.mapWidth = tileSize * horizontalTiles;
+		this.mapHeight = tileSize * verticalTiles;
 		
 		System.out.println(mapWidth);
 	}

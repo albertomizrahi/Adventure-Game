@@ -4,16 +4,16 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class KeyInputHandler extends KeyAdapter{
-	private int lastKeyPressed;
+	private int keyPressed;
 	private boolean leftPressed;
 	private boolean rightPressed;
 	private boolean downPressed;
 	private boolean upPressed;
 	
 	public void keyPressed(KeyEvent e) {
-		lastKeyPressed = e.getKeyCode();
+		keyPressed = e.getKeyCode();
 		
-		switch (lastKeyPressed) {
+		switch (keyPressed) {
 		case KeyEvent.VK_LEFT:
 			leftPressed = true;
 			break;
@@ -30,9 +30,9 @@ public class KeyInputHandler extends KeyAdapter{
 	}
 	
 	public void keyReleased(KeyEvent e) {
-		lastKeyPressed = e.getKeyCode();
+		keyPressed = e.getKeyCode();
 		
-		switch (lastKeyPressed) {
+		switch (keyPressed) {
 		case KeyEvent.VK_LEFT:
 			leftPressed = false;
 			break;

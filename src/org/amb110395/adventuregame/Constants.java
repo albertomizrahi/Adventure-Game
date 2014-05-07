@@ -7,6 +7,7 @@ public interface Constants {
 	int CAMERA_HEIGHT = 480;
 	
 	String MAIN_CHARACTER = "sprites/main_char_front.png";
+	String ENEMY_1 = "sprites/enemy1_front.png";
 	
 	String TERRAIN_WATER = "sprites/water.png";
 	String TERRAIN_GRASS = "sprites/grass.png";
