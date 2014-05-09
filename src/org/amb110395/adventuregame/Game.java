@@ -150,83 +150,16 @@ public class Game extends Canvas {
 			mainCharacter.setVerticalVelocity(MainCharacter.MOVE_SPEED);
 			mainCharacter.setDirection(Direction.DOWN);
 		}
-//		else {
-//			mainCharacter.setDirection(Direction.STATIONARY);
-//		}
-		
 
 	}
 
 	
 	public void update(long time) {
 		
-		for (Entity entity : entities) {
-			
+		for (Entity entity : entities) {		
 			entity.move(time);
-
-//			double distanceX = (delta * entity.getHorizontalVelocity()) / 1000;
-//			double distanceY = (delta * entity.getVerticalVelocity()) / 1000;;
-//			double deltaX = 0;
-//			double deltaY = 0;
-//			
-//			if (entity.getDirection().equals(Direction.RIGHT)) {
-//				double x = entity.getX() + distanceX + entity.getSprite().getWidth();
-//				double yTopCorner = entity.getY();
-//				double yBotCorner = (entity.getY() + entity.getSprite().getHeight()-1);
-//				
-//				Tile topRight = map.getTileInCoord(x, yTopCorner-1);
-//				Tile botRight =  map.getTileInCoord(x,yBotCorner-1);
-//				
-//				
-//				if (!topRight.isPassable() || !botRight.isPassable()) {
-//					 deltaX = x - topRight.getX();
-//				}
-//			} 
-//			else if (entity.getDirection().equals(Direction.LEFT)) {
-//				double x = entity.getX() + distanceX;
-//				double yTopCorner = entity.getY();
-//				double yBotCorner = (entity.getY() + entity.getSprite().getHeight()-1);
-//				
-//				Tile topLeft = map.getTileInCoord(x, yTopCorner);
-//				Tile botLeft =  map.getTileInCoord(x, yBotCorner);
-//				
-//				if (!topLeft.isPassable() || !botLeft.isPassable()) {
-//					 deltaX = x - (topLeft.getX() + map.getTileSize());
-//				}
-//			} 
-//			else if (entity.getDirection().equals(Direction.UP)) {
-//				double y = entity.getY() + distanceY-1;
-//				double xLeftCorner =  entity.getX();
-//				double xRightCorner = (entity.getX() + entity.getSprite().getWidth()-1);
-//				
-//				Tile topLeft = map.getTileInCoord(xLeftCorner, y);
-//				Tile topRight =  map.getTileInCoord(xRightCorner, y);
-//				
-//				if (!topLeft.isPassable() || !topRight.isPassable()) {
-//					 deltaY = y - (topLeft.getY() + map.getTileSize());
-//				}
-//			} 
-//			else if (entity.getDirection().equals(Direction.DOWN)) {
-//				double y = entity.getY() + distanceY + entity.getSprite().getHeight();
-//				double xLeftCorner =  entity.getX();
-//				double xRightCorner = (entity.getX() + entity.getSprite().getWidth()-1);
-//				
-//				Tile botLeft = map.getTileInCoord(xLeftCorner, y);
-//				Tile botRight =  map.getTileInCoord(xRightCorner, y);
-//				
-//				if (!botLeft.isPassable() || !botRight.isPassable()) {
-//					 deltaY = y - botLeft.getY();
-//				}
-//			} 
-//			
-//			double dx = distanceX - deltaX;
-//			double dy = distanceY - deltaY;
-//			
-//			entity.moveBy(dx,dy);
-			
 		}
-
-
+		
 		for (Entity enemy : enemies) {
 			if (mainCharacter.hasCollidedWith(enemy)) {
 				mainCharacter.collidedWith(enemy);

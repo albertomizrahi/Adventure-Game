@@ -6,11 +6,13 @@ import java.awt.Rectangle;
 public class MainCharacter extends Entity{
 	public static final int MOVE_SPEED = 150;
 	
+	/* The x and y distance that the player will be moving next */
 	private double distanceToMoveX;
 	private double distanceToMoveY;
 	
 	private Map map;
 	
+	/* Store the various player's animations (TODO maybe create an AnimationManager class?) */
 	private Animation current;
 	private Animation walkRight;	
 	private Animation walkLeft;
@@ -20,19 +22,21 @@ public class MainCharacter extends Entity{
 	public MainCharacter(int x, int y, Map map) {
 		super(x, y);
 		this.map = map;
-		super.updateTilePos();
 		
-		walkRight = new Animation(SpriteStore.get().loadSpritesFromSheet("sprites/character_sprites.png", 6, 6, 0, 2, Constants.TILE_SIZE), 250);
-		walkLeft = new Animation(SpriteStore.get().loadSpritesFromSheet("sprites/character_sprites.png", 5, 5, 0, 2, Constants.TILE_SIZE), 250);
-		walkUp = new Animation(SpriteStore.get().loadSpritesFromSheet("sprites/character_sprites.png", 7, 7, 0, 2, Constants.TILE_SIZE), 250);
-		walkDown = new Animation(SpriteStore.get().loadSpritesFromSheet("sprites/character_sprites.png", 4, 4, 0, 2, Constants.TILE_SIZE), 250);
+		/* Load all the necessary animations for the main character */
+		walkRight = new Animation(SpriteStore.get().loadSpritesFromSheet("sprites/character_sprites.png", 6, 6, 0, 2, Constants.TILE_SIZE), 350);
+		walkLeft = new Animation(SpriteStore.get().loadSpritesFromSheet("sprites/character_sprites.png", 5, 5, 0, 2, Constants.TILE_SIZE), 350);
+		walkUp = new Animation(SpriteStore.get().loadSpritesFromSheet("sprites/character_sprites.png", 7, 7, 0, 2, Constants.TILE_SIZE), 350);
+		walkDown = new Animation(SpriteStore.get().loadSpritesFromSheet("sprites/character_sprites.png", 4, 4, 0, 2, Constants.TILE_SIZE), 350);
 
+		/* Assign the player's starting sprite and animation */
+		current = walkRight;
 		setSprite(walkRight.getCurrentSprite());
 	}
 	
 	public void move(long time) {
 		attemptMove(time);
-		super.moveBy(distanceToMoveX, distanceToMoveY);
+		moveBy(distanceToMoveX, distanceToMoveY);
 		
 		if (getDirection().equals(Direction.RIGHT))
 			walkRight.update(time, distanceToMoveX);
@@ -107,7 +111,9 @@ public class MainCharacter extends Entity{
 		
 	}
 	
-	
+	/**
+	 * Make sure that player's stays inside the map's limit
+	 */
 	public void moveBy(double deltaX, double deltaY) {
 		if ((getHorizontalVelocity() < 0) && (getX() < 0 )) {
 			return;
@@ -126,19 +132,21 @@ public class MainCharacter extends Entity{
 		super.moveBy(deltaX, deltaY);
 	}
 	
-//	public Rectangle getBounds() {
-//		return new Rectangle((int)getX(),(int)getY(), current.getCurrentSprite().getWidth(), current.getCurrentSprite().getHeight());
-//	}
 	
 	public boolean hasCollidedWith(Entity entity) {
 		return getBounds().intersects(entity.getBounds());
 	}
 	
+	/**
+	 * Handle all the player's collision with the rest of entities in the world
+	 */
 	public void collidedWith(Entity entity) {
 		if (entity instanceof Enemy) {
+			/* Make the player jump slightly to the opposite direction if he touches an enemy */
 			setX(getX() + getHorizontalVelocity()*-0.1);
 			setY(getY() + getVerticalVelocity()*-0.1);
 			
+			// Decrease his hitpoints
 			getStats().updateHitpoints(-10);
 		}
 	}
@@ -152,9 +160,6 @@ public class MainCharacter extends Entity{
 			current = walkUp;
 		else if(getDirection().equals(Direction.DOWN))
 			current = walkDown;
-		else 
-			current = walkRight;
-		
 		
 		 setSprite(current.getCurrentSprite());
 		 super.draw(g, scrollX, scrollY);

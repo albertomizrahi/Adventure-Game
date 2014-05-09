@@ -7,10 +7,7 @@ public class Enemy extends Entity{
 		super.updateTilePos();
 	}
 
-	
 	public void collidedWith(Entity entity) {		
-	}
-	
-	
+	}	
 
 }

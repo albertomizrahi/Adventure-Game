@@ -3,7 +3,9 @@ package org.amb110395.adventuregame;
 import java.awt.Graphics;
 
 public class Map {
+	/* 2d Tile array that will be used to draw the map */
 	private Tile [][] map;
+	/* The size of each tile in the map */
 	private int tileSize;
 	private int mapWidth;
 	private int mapHeight;
@@ -11,10 +13,10 @@ public class Map {
 	public Map(int tileSize, int verticalTiles, int horizontalTiles) {
 		map = new Tile[verticalTiles][horizontalTiles];
 		this.tileSize = tileSize;
+		
+		/* Calculate the map's width and height using  the 2d array's dimension and the tile size */
 		this.mapWidth = tileSize * horizontalTiles;
 		this.mapHeight = tileSize * verticalTiles;
-		
-		System.out.println(mapWidth);
 	}
 	
 	public Tile getTile(int x, int y) {
@@ -55,6 +57,12 @@ public class Map {
 		return tileSize;
 	}
 	
+	/**
+	 * Loop through the entire tile array and draw the map
+	 * @param g
+	 * @param scrollX
+	 * @param scrollY
+	 */
 	public void draw(Graphics g, double scrollX, double scrollY) {
 		for (int x = 0; x < map.length; x++) {
 			for (int y = 0; y < map[0].length; y++) {
