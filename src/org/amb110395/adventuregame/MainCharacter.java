@@ -12,6 +12,9 @@ public class MainCharacter extends Entity{
 	
 	private Map map;
 	
+	private Weapon sword;
+	private boolean attack;
+	
 	/* Store the various player's animations (TODO maybe create an AnimationManager class?) */
 	private Animation current;
 	private Animation walkRight;	
@@ -22,7 +25,7 @@ public class MainCharacter extends Entity{
 	public MainCharacter(int x, int y, Map map) {
 		super(x, y);
 		this.map = map;
-		
+			
 		/* Load all the necessary animations for the main character */
 		walkRight = new Animation(SpriteStore.get().loadSpritesFromSheet("sprites/character_sprites.png", 6, 6, 0, 2, Constants.TILE_SIZE), 350);
 		walkLeft = new Animation(SpriteStore.get().loadSpritesFromSheet("sprites/character_sprites.png", 5, 5, 0, 2, Constants.TILE_SIZE), 350);
@@ -32,6 +35,8 @@ public class MainCharacter extends Entity{
 		/* Assign the player's starting sprite and animation */
 		current = walkRight;
 		setSprite(walkRight.getCurrentSprite());
+		
+		sword = new Weapon("sprites/sword_right.png", getX() + getSprite().getWidth(), getY() + getSprite().getHeight()/2); //
 	}
 	
 	public void move(long time) {
@@ -130,6 +135,7 @@ public class MainCharacter extends Entity{
 		}
 		
 		super.moveBy(deltaX, deltaY);
+		sword.moveBy(deltaX, deltaY);
 	}
 	
 	
@@ -162,7 +168,22 @@ public class MainCharacter extends Entity{
 			current = walkDown;
 		
 		 setSprite(current.getCurrentSprite());
+		 
 		 super.draw(g, scrollX, scrollY);
+		 
+		 if (isAttacking())
+			 sword.draw(g, scrollX, scrollY);
+		 
+	}
+
+	public Weapon getSword() {
+		return sword;
+	}
+	public boolean isAttacking() {
+		return attack;
+	}
+	public void setAttack(boolean attack) {
+		this.attack = attack;
 	}
 
 }

@@ -9,6 +9,7 @@ public class KeyInputHandler extends KeyAdapter{
 	private boolean rightPressed;
 	private boolean downPressed;
 	private boolean upPressed;
+	private boolean spacebarPressed;
 	
 	public void keyPressed(KeyEvent e) {
 		keyPressed = e.getKeyCode();
@@ -25,6 +26,9 @@ public class KeyInputHandler extends KeyAdapter{
 			break;
 		case KeyEvent.VK_DOWN:
 			downPressed = true;
+			break;
+		case KeyEvent.VK_SPACE:
+			spacebarPressed = true;
 			break;
 		}
 	}
@@ -45,6 +49,9 @@ public class KeyInputHandler extends KeyAdapter{
 		case KeyEvent.VK_DOWN:
 			downPressed = false;
 			break;
+		case KeyEvent.VK_SPACE:
+			spacebarPressed = false;
+			break;
 		}
 	}
 	
@@ -59,6 +66,9 @@ public class KeyInputHandler extends KeyAdapter{
 	}
 	public boolean isDownPressed() {
 		return downPressed;
+	}
+	public boolean isSpacebarPressed() {
+		return spacebarPressed;
 	}
 	
 

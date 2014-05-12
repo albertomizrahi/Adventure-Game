@@ -27,7 +27,7 @@ public class Game extends Canvas {
 	private List<Entity> entities;
 	private List<Enemy> enemies;
 	/* Object that represents the main character */
-	private Entity mainCharacter;
+	private MainCharacter mainCharacter;
 	/* Represents the view of the world that the user can see */
 	private Camera camera;
 	
@@ -105,7 +105,7 @@ public class Game extends Canvas {
 		mainCharacter = new MainCharacter(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, map);
 		entities.add(mainCharacter);
 
-		Enemy enemy = new Enemy(Constants.ENEMY_1, 200, 200, map);
+		Enemy enemy = new Enemy(Constants.ENEMY_1, 200, 200, new Stats());
 		entities.add(enemy);
 		enemies.add(enemy);
 		
@@ -133,6 +133,7 @@ public class Game extends Canvas {
 
 		mainCharacter.setHorizontalVelocity(0);
 		mainCharacter.setVerticalVelocity(0);
+		mainCharacter.setAttack(false);
 
 		if (inputHandler.isLeftPressed()) {
 			mainCharacter.setHorizontalVelocity(-MainCharacter.MOVE_SPEED);
@@ -150,6 +151,9 @@ public class Game extends Canvas {
 			mainCharacter.setVerticalVelocity(MainCharacter.MOVE_SPEED);
 			mainCharacter.setDirection(Direction.DOWN);
 		}
+		else if(inputHandler.isSpacebarPressed()) {
+			mainCharacter.setAttack(true);
+		}
 
 	}
 
@@ -165,12 +169,12 @@ public class Game extends Canvas {
 				mainCharacter.collidedWith(enemy);
 				enemy.collidedWith(mainCharacter);
 			}
+			if (mainCharacter.isAttacking() && mainCharacter.getSword().hasCollidedWith(enemy)) {
+				mainCharacter.getSword().collidedWith(enemy);
+			}
 		}
 		
-		camera.update(mainCharacter, map);
-
-		System.out.println(mainCharacter.getStats().getHitpoints());
-			
+		camera.update(mainCharacter, map);			
 		
 	}
 
@@ -186,6 +190,8 @@ public class Game extends Canvas {
 		for (Entity entity : entities) {
 			entity.draw(g, camera.getX(), camera.getY());
 		}
+		
+		mainCharacter.draw(g, camera.getX(), camera.getY());
 
 		// We have completed drawing so clear up the graphics and flip the buffer over
 		g.dispose();
